@@ -17,9 +17,9 @@ class CreateComicsTable extends Migration
             $table->id();
             $table->string('personaggio',50);
             $table->string('storia',100);
-            $table->integer('numero');
+            $table->integer('numero')->nullable();
             $table->string('editore',50);
-            $table->integer('anno');
+            $table->integer('anno')->nullable();
             $table->timestamps();
         });
     }

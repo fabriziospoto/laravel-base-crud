@@ -37,7 +37,17 @@ class ComicsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        if(empty($data['personaggio']) || empty($data['storia']) || empty($data['editore'])) {
+                return back()->withInput();
+           }
+        $comicNew = new Comic;
+        $comicNew->personaggio = $data['personaggio'];
+        $comicNew->storia = $data['storia'];
+        $comicNew->numero = $data['numero'];
+        $comicNew->anno = $data['anno'];
+        $comicNew->editore = $data['editore'];
+        $comicNew->save();
     }
 
     /**
