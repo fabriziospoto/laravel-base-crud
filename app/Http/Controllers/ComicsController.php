@@ -15,7 +15,8 @@ class ComicsController extends Controller
     public function index()
     {
         $data = Comic::all();  // prendo tutti i campi
-        dd($data);
+        // dd($data);
+        return view('index',compact('data'));
     }
 
     /**
@@ -25,7 +26,7 @@ class ComicsController extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
 
     /**
