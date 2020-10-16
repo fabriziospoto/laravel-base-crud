@@ -38,16 +38,17 @@ class ComicsController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        if(empty($data['personaggio']) || empty($data['storia']) || empty($data['editore'])) {
-                return back()->withInput();
-           }
+        $request->validate([
+                'personaggio' => 'required|max:50',
+                'storia' => 'required|max:100',
+                'editore' => 'required|max:50'
+            ]);
         $comicNew = new Comic;
-        $comicNew->personaggio = $data['personaggio'];
-        $comicNew->storia = $data['storia'];
-        $comicNew->numero = $data['numero'];
-        $comicNew->anno = $data['anno'];
-        $comicNew->editore = $data['editore'];
-        $comicNew->save();
+        $comicNew->fill($data);
+        $saved = $comicNew->save();
+        if($saved) {
+            return redirect()->route('comics.index');
+        }
     }
 
     /**
@@ -56,9 +57,9 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Comic $comic)
     {
-        //
+        return view('show',compact('comic'));
     }
 
     /**
@@ -67,9 +68,9 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Comic $comic)
     {
-        //
+        return view('create',compact('comic'));
     }
 
     /**
@@ -79,9 +80,18 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comic $comic)
     {
-        //
+
+        $data = $request->all();
+        $request->validate([
+                'personaggio' => 'required|max:50',
+                'storia' => 'required|max:100',
+                'editore' => 'required|max:50'
+            ]);
+        $comic->update($data);
+
+        return view('show',compact('comic'));
     }
 
     /**
@@ -90,8 +100,10 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comic $comic)
     {
-        //
+        $comic->delete();
+
+        return redirect()->route('comics.index'); //  Decido dove ritornare. In questo caso nell'elenco.
     }
 }
